@@ -1,7 +1,6 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using Packages.Rider.Editor.Util;
 using UnityEditor;
 using UnityEditor.UIElements;
 using UnityEngine;
@@ -15,8 +14,6 @@ public class AssetIntegratorEditorWindow : EditorWindow
     private Label folderPathLabel;
     private ListView assetListView;
     private string[] assetFiles;
-    
-    private AssetValidationConfig m_CurrentConfig;
 
     [MenuItem("Tools/Asset Integrator")]
     public static void OpenWindow()
@@ -36,7 +33,7 @@ public class AssetIntegratorEditorWindow : EditorWindow
         configObjectField.objectType = typeof(AssetValidationConfig);
         configObjectField.RegisterValueChangedCallback(evt =>
         {
-            m_CurrentConfig = (AssetValidationConfig)evt.newValue;
+            AssetIntegratorSession.CurrentConfig = (AssetValidationConfig)evt.newValue;
             openFolderButton.SetEnabled(evt.newValue != null);
         });
         
@@ -90,7 +87,7 @@ public class AssetIntegratorEditorWindow : EditorWindow
         
         List<string> allowedExtensions = new List<string>();
 
-        foreach (var ext in m_CurrentConfig.rules)
+        foreach (var ext in AssetIntegratorSession.CurrentConfig.rules)
         {
             allowedExtensions.AddRange(ext.extensions);
         }
@@ -106,7 +103,7 @@ public class AssetIntegratorEditorWindow : EditorWindow
     {
         List<string> parts = name.Split('_').ToList();
 
-        foreach (var ext in m_CurrentConfig.rules)
+        foreach (var ext in AssetIntegratorSession.CurrentConfig.rules)
         {
             if (ext.extensions.Contains(extension))
             {
