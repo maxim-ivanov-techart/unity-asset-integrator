@@ -17,7 +17,7 @@ MonoBehaviour:
     - .fbx
     minimalNamePart: 2
     acceptableSuffixes: []
-    preset: {fileID: 0}
+    preset: {fileID: 2655988077585873504, guid: 8fb867df7bf00cf44b51b9aa251f7601, type: 2}
   - extensions:
     - .tif
     minimalNamePart: 3
