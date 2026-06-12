@@ -2,7 +2,9 @@
     <Style src="project://database/Assets/Tools/unity-asset-integrator/Editor/AssetIntegratorEditorWindow.uss?fileID=7433441132597879392&amp;guid=f5b0002cc0f31374c8c406b5381e8c1f&amp;type=3#AssetIntegratorEditorWindow"/>
     <ui:Label text="Asset Integrator" style="justify-content: center; align-items: center; align-self: center;"/>
     <uie:ObjectField label="Asset Validation Config" name="configField"/>
+    <uie:ObjectField label="Project Folder" name="projectFolderField"/>
     <ui:Button text="Button" name="folderOpen" style="width: 260px; -unity-text-align: middle-center; white-space: pre; align-items: center; align-self: center;"/>
+    <ui:Button text="Button" name="assetImport" style="width: 260px; -unity-text-align: middle-center; white-space: pre; align-items: center; align-self: center;"/>
     <ui:Label text="Path:&#10;&#10;" name="folderPath"/>
     <ui:ListView name="assetListView"/>
 </ui:UXML>

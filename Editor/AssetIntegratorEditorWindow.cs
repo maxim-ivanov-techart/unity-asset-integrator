@@ -10,10 +10,11 @@ public class AssetIntegratorEditorWindow : EditorWindow
 {
     [SerializeField]
     private VisualTreeAsset m_VisualTreeAsset;
-
-    private Label folderPathLabel;
+    
     private ListView assetListView;
     private string[] assetFiles;
+    private string projectFolderPath;
+    private string sourceFolderPath;
 
     [MenuItem("Tools/Asset Integrator")]
     public static void OpenWindow()
@@ -28,8 +29,11 @@ public class AssetIntegratorEditorWindow : EditorWindow
         VisualElement uxml = m_VisualTreeAsset.Instantiate();
         root.Add(uxml);
         ObjectField configObjectField = root.Q<ObjectField>("configField");
+        ObjectField projectFolder = root.Q<ObjectField>("projectFolderField");
         Button openFolderButton = root.Q<Button>("folderOpen");
+        Button importAssetButton = root.Q<Button>("assetImport");
         openFolderButton.SetEnabled(false);
+        
         configObjectField.objectType = typeof(AssetValidationConfig);
         configObjectField.RegisterValueChangedCallback(evt =>
         {
@@ -37,10 +41,26 @@ public class AssetIntegratorEditorWindow : EditorWindow
             openFolderButton.SetEnabled(evt.newValue != null);
         });
         
-        folderPathLabel = root.Q<Label>("folderPath");
+        projectFolder.objectType = typeof(DefaultAsset);
+        projectFolder.RegisterValueChangedCallback(evt =>
+        {
+            projectFolderPath = AssetDatabase.GetAssetPath(projectFolder.value);
+        });
         assetListView  = root.Q<ListView>("assetListView");
         
         openFolderButton.clicked += OpenFolderButtonClicked;
+        Debug.Log(importAssetButton);
+        importAssetButton.clicked += () =>
+        {
+            foreach (string file in assetFiles)
+            {
+                string destinationPath = projectFolderPath + "/" + Path.GetFileName(file);
+                ImportAsset(file, destinationPath);
+            }
+        };
+        
+        
+        
     }
 
     private void OpenFolderButtonClicked()
@@ -49,7 +69,7 @@ public class AssetIntegratorEditorWindow : EditorWindow
         
         if (!string.IsNullOrEmpty(path))
         {
-            folderPathLabel.text = path;
+            sourceFolderPath = path;
         }
 
         assetFiles = GetAssetFiles(path);
@@ -127,5 +147,11 @@ public class AssetIntegratorEditorWindow : EditorWindow
             }
         }
         return false;
+    }
+    
+    private void ImportAsset(string sourcePath,  string destinationPath)
+    {
+        FileUtil.CopyFileOrDirectory(sourcePath, destinationPath);
+        AssetDatabase.Refresh();
     }
 }
